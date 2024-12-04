@@ -238,7 +238,7 @@ def get_imports_info(imports, pypi_server="https://pypi.python.org/pypi/", proxy
                 'Import named "%s" not found locally. ' "Trying to resolve it at the PyPI server.",
                 item,
             )
-            response = requests.get("{0}{1}/json".format(pypi_server, item), proxies=proxy)
+            response = requests.get("{0}{1}/json".format(pypi_server, item), proxies=proxy, timeout=60)
             if response.status_code == 200:
                 if hasattr(response.content, "decode"):
                     data = json2package(response.content.decode())
