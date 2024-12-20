@@ -46,11 +46,11 @@ import logging
 import ast
 import traceback
 from docopt import docopt
-import requests
 from yarg import json2package
 from yarg.exceptions import HTTPError
 
 from pipreqs import __version__
+from security import safe_requests
 
 REGEXP = [re.compile(r"^import (.+)$"), re.compile(r"^from ((?!\.+).*?) import (?:.*)$")]
 DEFAULT_EXTENSIONS = [".py", ".pyw"]
@@ -238,7 +238,7 @@ def get_imports_info(imports, pypi_server="https://pypi.python.org/pypi/", proxy
                 'Import named "%s" not found locally. ' "Trying to resolve it at the PyPI server.",
                 item,
             )
-            response = requests.get("{0}{1}/json".format(pypi_server, item), proxies=proxy)
+            response = safe_requests.get("{0}{1}/json".format(pypi_server, item), proxies=proxy)
             if response.status_code == 200:
                 if hasattr(response.content, "decode"):
                     data = json2package(response.content.decode())
